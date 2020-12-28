@@ -1,0 +1,509 @@
+swagger: '2.0'
+info:
+  title: Cloud Endpoints | API Docs
+  description: Cloud Endpoints, API Documents and specification
+  version: 0.1.0
+host: <ESP_HOSTNAME> # without http
+schemes:
+  - https
+produces:
+  - application/json
+x-google-management:
+  metrics:
+    # Define a metric for read requests.
+    - name: "read-requests"
+      displayName: "Read requests"
+      valueType: INT64
+      metricKind: DELTA
+  quota:
+    limits:
+      # Define the limit or the read-requests metric.
+      - name: "read-limit"
+        metric: "read-requests"
+        unit: "1/min/{project}"
+        values:
+          STANDARD: 15
+paths:
+  /api/v1/stock/info:
+    get:
+      produces:
+        - application/json
+      security:
+        - firebase: []
+      x-google-backend:
+        address: <URL_HOSTNAME>/info
+      tags:
+        - Stock API (Node.js)
+      summary: Get service information
+      operationId: stock_service_info
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            $ref: '#/definitions/InfoService'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NodeObjResponseFailed'
+  /api/v1/stock:
+    get:
+      produces:
+        - application/json
+      security:
+        - firebase: []
+      x-google-backend:
+        address: <URL_HOSTNAME>/stock
+      tags:
+        - Stock API (Node.js)
+      summary: Get stock data
+      operationId: get_stock_data
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            $ref: '#/definitions/NodeStockArrayDataResponse'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NodeObjResponseFailed'
+    post:
+      produces:
+        - application/json
+      security:
+        - firebase: []
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/NodeStockDataObjResponse'
+      x-google-backend:
+        address: <URL_HOSTNAME>/stock
+      tags:
+        - Stock API (Node.js)
+      summary: Create stock data
+      operationId: create_stock_data
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            $ref: '#/definitions/NodeStockDataObjResponse'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NodeObjResponseFailed'
+  /api/v1/stock/{id}:
+    get:
+      produces:
+        - application/json
+      security:
+        - firebase: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+      x-google-backend:
+        address: <URL_HOSTNAME>/stock/{id}
+      tags:
+        - Stock API (Node.js)
+      summary: Get stock data each id 
+      operationId: get_stock_data_each_id
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            $ref: '#/definitions/NodeStockDataObjResponse'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NodeObjResponseFailed'
+    put:
+      produces:
+        - application/json
+      security:
+        - firebase: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/NodeStockDataObjResponse'
+      x-google-backend:
+        address: <URL_HOSTNAME>/stock/{id}
+      tags:
+        - Stock API (Node.js)
+      summary: Update stock data each id 
+      operationId: update_stock_data_each_id
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            $ref: '#/definitions/NodeStockDataObjResponse'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NodeObjResponseFailed'
+    delete:
+      produces:
+        - application/json
+      security:
+        - firebase: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+      x-google-backend:
+        address: <URL_HOSTNAME>/stock/{id}
+      tags:
+        - Stock API (Node.js)
+      summary: Delete stock data each id 
+      operationId: delete_stock_data_each_id
+      responses:
+        '204':
+          description: A successful response
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NodeObjResponseFailed'
+  /api/v1/payment/info:
+    get:
+      produces:
+        - application/json
+      security:
+        - firebase: []
+      x-google-backend:
+        address: <URL_HOSTNAME>/info
+      tags:
+        - Payment API (Golang)
+      summary: Get Service Infomation
+      operationId: get_payment_info_service
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            $ref: '#/definitions/InfoService'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NodeObjResponseFailed'
+  /api/v1/payment:
+    post:
+      produces:
+        - application/json
+      security:
+        - firebase: []
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/GolangTransactionObj'
+      x-google-backend:
+        address: <URL_HOSTNAME>/payment
+      tags:
+        - Payment API (Golang)
+      summary: Create payment data
+      operationId: create_payment_data
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            $ref: '#/definitions/GolangTransactionSuccess'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NodeObjResponseFailed'
+    get:
+      produces:
+        - application/json
+      security:
+        - firebase: []
+      parameters:
+        - in: query
+          name: id
+          required: true
+          type: string
+      x-google-backend:
+        address: <URL_HOSTNAME>/payment/status
+      tags:
+        - Payment API (Golang)
+      summary: Get payment data each id 
+      operationId: get_payment_data_each_id
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            $ref: '#/definitions/GolangTransactionSuccess'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NodeObjResponseFailed'
+  /api/v1/payment/status:
+    get:
+      produces:
+        - application/json
+      security:
+        - firebase: []
+      parameters:
+        - in: query
+          name: id
+          required: true
+          type: string
+      x-google-backend:
+        address: <URL_HOSTNAME>/payment/status
+      tags:
+        - Payment API (Golang)
+      summary: Get payment status data each id 
+      operationId:  get_payment_status_data_each_id 
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            $ref: '#/definitions/GolangTransactionStatusObj'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NodeObjResponseFailed'
+    patch:
+      produces:
+        - application/json
+      security:
+        - firebase: []
+      parameters:
+        - in: query
+          name: id
+          required: true
+          type: string
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/GolangTransactionStatusObj'
+      x-google-backend:
+        address: <URL_HOSTNAME>/payment/status
+      tags:
+        - Payment API (Golang)
+      summary: Update payment status data each id 
+      operationId: update_payment_status_data_each_id
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            $ref: '#/definitions/GolangTransactionStatusObj'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NodeObjResponseFailed'
+  /api/v1/covid-19/info:
+    get:
+      x-google-quota:
+        metricCosts:
+          "read-requests": 1
+      produces:
+        - application/json
+      security:
+          - firebase: []
+      x-google-backend:
+        address: <URL_HOSTNAME>/info
+      tags:
+        - Covid API (Python)
+      summary: Get Service Infomation
+      operationId: get_covid_info_service
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            $ref: '#/definitions/InfoService'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NodeObjResponseFailed'
+  /api/v1/covid-19/all:
+    get:
+      produces:
+        - application/json
+      security:
+          - firebase: []
+      x-google-backend:
+        address: <URL_HOSTNAME>/covid-19
+      tags:
+        - Covid API (Python)
+      summary: Get covid data total 
+      operationId: get_covid_data 
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            $ref: '#/definitions/PythonCovidObjectTotal'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NodeObjResponseFailed'
+  /api/v1/covid-19/th:
+    get:
+      produces:
+        - application/json
+      security:
+          - firebase: []
+      x-google-backend:
+        address: <URL_HOSTNAME>/covid-19/th
+      tags:
+        - Covid API (Python)
+      summary: Get covid data today of Thailand 
+      operationId: get_covid_data_thailand
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            $ref: '#/definitions/PythonCovidObjectTotal'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NodeObjResponseFailed'
+definitions:
+  InfoService:
+    title: InfoService
+    type: object
+    properties:
+      serviceName:
+        title: serviceName
+        type: string
+      language:
+        title: language
+        type: string
+      framework:
+        title: framework
+        type: string
+  JavaObjResponseSuccess:
+    title: JavaObjResponseSuccess
+    type: object
+    properties:
+      id:
+        title: id
+        type: string
+      text:
+        title: text
+        type: string
+  JavaObjResponseFailed:
+    title: JavaObjResponseFailed
+    type: object
+    properties:
+      timestamp:
+        title: timestamp
+        type: string
+      status:
+        title: status
+        type: number
+      error:
+        title: error
+        type: string
+      message:
+        title: message
+        type: string
+      path:
+        title: path
+        type: string
+  NodeObjResponseFailed:
+    title: NodeObjResponseFailed
+    type: object
+    properties:
+      message:
+        title: message
+        type: string
+  NodeStockDataObjResponse:
+    title: NodeStockDataObjResponse
+    type: object
+    properties:
+      id:
+        title: id
+        type: string
+      name:
+        title: name
+        type: string
+      imageURL:
+        title: imageURL
+        type: string
+      type:
+        title: type
+        type: string
+  NodeStockArrayDataResponse:
+    title: NodeStockArrayDataResponse
+    type: array
+    items: 
+      $ref: '#/definitions/NodeStockDataObjResponse'
+  GolangTransactionObj:
+    title: GolangTransactionObj
+    type: object
+    properties:
+      client_id:
+        title: client_id
+        type: string
+      product_name:
+        title: product_name
+        type: string
+      provider:
+        title: provider
+        type: string
+      amount:
+        title: amount
+        type: number
+      description:
+        title: description
+        type: string
+      currency:
+        title: currency
+        type: string
+  GolangTransactionSuccess:
+    title: GolangTransactionSuccess
+    type: object
+    properties:
+      message:
+        title: message
+        type: string
+      transaction_id:
+        title: transaction_id
+        type: string
+  GolangTransactionStatusObj:
+    title: GolangTransactionStatusObj
+    type: object
+    properties:
+      status:
+        title: status
+        type: string
+  PythonCovidObjectTotal:
+    title: PythonCovidObjectTotal
+    type: object
+    properties:
+      confirmed:
+        title: confirmed
+        type: number
+      recovered:
+        title: recovered
+        type: number
+      critical:
+        title: critical
+        type: number
+      deaths:
+        title: deaths
+        type: number
+      lastChange:
+        title: lastChange
+        type: string
+      lastUpdate:
+        title: lastUpdate
+        type: string
+securityDefinitions:
+  firebase:
+    authorizationUrl: "<URL_DOMAIN>"
+    flow: "implicit"
+    type: "oauth2"
+    x-google-issuer: "https://securetoken.google.com/<GCP_PROJECT_ID>"
+    x-google-jwks_uri: "https://www.googleapis.com/service_accounts/v1/metadata/x509/securetoken@system.gserviceaccount.com"
+    x-google-audiences: "<GCP_PROJECT_ID>"
+x-components: {}
