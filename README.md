@@ -9,7 +9,7 @@ https://p-srinikorn.medium.com/%E0%B9%80%E0%B8%A3%E0%B8%B4%E0%B9%88%E0%B8%A1%E0%
 ## Cloud Endpoints 
 ![Diagram](https://miro.medium.com/max/700/1*6Gru73r0LL9bOzRgwjSs7A.png)
 
-## Cloud Endpoints 
+## API Gateway (Beta) 
 ![Diagram](https://miro.medium.com/max/700/1*qB_7fVmbf-_IF7ACd1dJPg.png)
 
 
